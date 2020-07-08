@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useState, useReducer } from 'react';
-import todoReducer from '../reducers/todoReducer';
+import { todoReducer } from '../reducers/todoReducer';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState();
