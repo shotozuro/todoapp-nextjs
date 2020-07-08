@@ -1,26 +1,25 @@
+// @ts-nocheck
 import Head from 'next/head';
 import { useState, useReducer } from 'react';
 import { todoReducer } from '../reducers/todoReducer';
+import TaskForm from '../components/TaskForm';
+import TaskList, { TaskType } from '../components/TaskList';
 
 export default function Home() {
-  const [selectedDate, setSelectedDate] = useState();
-  const [state, dispatch] = useReducer(todoReducer, { nextId: 1, todos: [] });
-  const [task, setTask] = useState('');
-  const [editId, setEditId] = useState(null);
+  const [state, dispatch] = useReducer(todoReducer, {
+    nextId: 1,
+    todos: [],
+  });
+  const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
 
-  const onChangeTask = (e) => {
-    setTask(e.target.value);
-  };
-
-  const toggleComplete = (id) => {
+  const toggleComplete = (id: number) => {
     dispatch({
       type: 'TOGGLE_COMPLETE',
       id,
     });
   };
 
-  const addTask = (e) => {
-    e.preventDefault();
+  const addTask = (task: string) => {
     if (task) {
       dispatch({
         type: 'ADD_TASK',
@@ -30,33 +29,30 @@ export default function Home() {
           completed: false,
         },
       });
-      setTask('');
     }
   };
 
-  const removeTask = (id) => {
+  const removeTask = (id: number) => {
     dispatch({
       type: 'REMOVE_TASK',
       id,
     });
   };
 
-  const onClickEdit = (id) => {
-    const getTodo = state.todos.find((todo) => todo.id === id);
-    setTask(getTodo.task);
-    setEditId(id);
+  const onClickEdit = (taskObject: TaskType) => {
+    setSelectedTask(taskObject);
   };
 
-  const onSave = (e) => {
-    e.preventDefault();
-    const payload = { id: editId, task };
-    dispatch({
-      type: 'EDIT_TASK',
-      id: editId,
-      payload,
-    });
-    setEditId(null);
-    setTask('');
+  const onSave = (task: string) => {
+    if (task) {
+      const payload = { ...selectedTask, task };
+      dispatch({
+        type: 'EDIT_TASK',
+        id: selectedTask.id,
+        payload,
+      });
+      setSelectedTask(null);
+    }
   };
 
   return (
@@ -71,40 +67,16 @@ export default function Home() {
 
         <div className='grid'>
           <div className='card tasks'>
-            <section className='new-task-form'>
-              <h3>New Task</h3>
-              <form onSubmit={editId ? onSave : addTask}>
-                <input
-                  type='text'
-                  name='task'
-                  value={task}
-                  onChange={onChangeTask}
-                />
-                <button className='btn-submit' type='submit'>
-                  {editId ? 'Save' : 'Add'}
-                </button>
-              </form>
-            </section>
-            <section className='task-list'>
-              <ul>
-                {state.todos.map((todo) => {
-                  return (
-                    <li key={todo.id}>
-                      <span
-                        className={`task${todo.completed && ' completed'}`}
-                        onClick={() => toggleComplete(todo.id)}
-                      >
-                        {todo.task}
-                      </span>
-                      <button onClick={() => onClickEdit(todo.id)}>Edit</button>
-                      <button onClick={() => removeTask(todo.id)}>
-                        Remove
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
+            <TaskForm
+              onSubmit={(text) => (selectedTask ? onSave(text) : addTask(text))}
+              selectedTask={selectedTask}
+            />
+            <TaskList
+              data={state.todos}
+              onClickEdit={onClickEdit}
+              removeTask={removeTask}
+              toggleComplete={toggleComplete}
+            />
           </div>
         </div>
       </main>
@@ -230,10 +202,6 @@ export default function Home() {
           background-color: #f5f5f5;
         }
 
-        .completed {
-          text-decoration-line: line-through;
-        }
-
         .date-item {
           height: 40px;
           width: 40px;
@@ -242,20 +210,6 @@ export default function Home() {
 
         .date-item :hover {
           background-color: red;
-        }
-
-        .btn-submit {
-          background-color: #6ab04c;
-          height: 36px;
-          border-radius: 4px;
-          min-width: 80px;
-          border: 1px solid #badc58;
-          color: #fff;
-        }
-
-        input {
-          height: 36px;
-          padding: 0 4px;
         }
 
         @media (max-width: 600px) {
