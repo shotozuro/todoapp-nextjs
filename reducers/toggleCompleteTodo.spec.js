@@ -28,6 +28,8 @@ describe('toggle complete TODO', () => {
       id: 2,
     });
     expect(state.todos.length).toBe(3);
+    expect(state.todos[1].completed).toBe(true);
+
     expect(state.todos).toStrictEqual([
       {
         id: 1,
@@ -38,6 +40,52 @@ describe('toggle complete TODO', () => {
         id: 2,
         task: 'Meeting with boss',
         completed: true,
+      },
+      {
+        id: 3,
+        task: 'Go to book store',
+        completed: false,
+      },
+    ]);
+  });
+
+  it('set completed status to be false if the task with given id has completed', () => {
+    const todoWithCompleted = {
+      nextId: 4,
+      todos: [
+        {
+          id: 1,
+          task: 'Meeting with clients',
+          completed: false,
+        },
+        {
+          id: 2,
+          task: 'Meeting with boss',
+          completed: true,
+        },
+        {
+          id: 3,
+          task: 'Go to book store',
+          completed: false,
+        },
+      ],
+    };
+    const state = todoReducer(todoWithCompleted, {
+      type: 'TOGGLE_COMPLETE',
+      id: 2,
+    });
+    expect(state.todos.length).toBe(3);
+    expect(state.todos[1].completed).toBe(false);
+    expect(state.todos).toStrictEqual([
+      {
+        id: 1,
+        task: 'Meeting with clients',
+        completed: false,
+      },
+      {
+        id: 2,
+        task: 'Meeting with boss',
+        completed: false,
       },
       {
         id: 3,
