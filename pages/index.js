@@ -1,63 +1,113 @@
-import Head from 'next/head'
+import Head from 'next/head';
+import { useState, useReducer } from 'react';
+import todoReducer from '../reducers/todoReducer';
 
 export default function Home() {
+  const [selectedDate, setSelectedDate] = useState();
+  const [state, dispatch] = useReducer(todoReducer, { nextId: 1, todos: [] });
+  const [task, setTask] = useState('');
+  const [editId, setEditId] = useState(null);
+
+  const onChangeTask = (e) => {
+    setTask(e.target.value);
+  };
+
+  const toggleComplete = (id) => {
+    dispatch({
+      type: 'TOGGLE_COMPLETE',
+      id,
+    });
+  };
+
+  const addTask = (e) => {
+    e.preventDefault();
+    if (task) {
+      dispatch({
+        type: 'ADD_TASK',
+        payload: {
+          id: state.nextId,
+          task,
+          completed: false,
+        },
+      });
+      setTask('');
+    }
+  };
+
+  const removeTask = (id) => {
+    dispatch({
+      type: 'REMOVE_TASK',
+      id,
+    });
+  };
+
+  const onClickEdit = (id) => {
+    const getTodo = state.todos.find((todo) => todo.id === id);
+    setTask(getTodo.task);
+    setEditId(id);
+  };
+
+  const onSave = (e) => {
+    e.preventDefault();
+    const payload = { id: editId, task };
+    dispatch({
+      type: 'EDIT_TASK',
+      id: editId,
+      payload,
+    });
+    setEditId(null);
+    setTask('');
+  };
+
   return (
-    <div className="container">
+    <div className='container'>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Todo Next App</title>
+        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <h1 className='title'>Todo Next.js App</h1>
 
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className='grid'>
+          <div className='card tasks'>
+            <section className='new-task-form'>
+              <h3>New Task</h3>
+              <form onSubmit={editId ? onSave : addTask}>
+                <input
+                  type='text'
+                  name='task'
+                  value={task}
+                  onChange={onChangeTask}
+                />
+                <button className='btn-submit' type='submit'>
+                  {editId ? 'Save' : 'Add'}
+                </button>
+              </form>
+            </section>
+            <section className='task-list'>
+              <ul>
+                {state.todos.map((todo) => {
+                  return (
+                    <li key={todo.id}>
+                      <span
+                        className={`task${todo.completed && ' completed'}`}
+                        onClick={() => toggleComplete(todo.id)}
+                      >
+                        {todo.task}
+                      </span>
+                      <button onClick={() => onClickEdit(todo.id)}>Edit</button>
+                      <button onClick={() => removeTask(todo.id)}>
+                        Remove
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          </div>
         </div>
       </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
 
       <style jsx>{`
         .container {
@@ -160,13 +210,6 @@ export default function Home() {
           transition: color 0.15s ease, border-color 0.15s ease;
         }
 
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
         .card h3 {
           margin: 0 0 1rem 0;
           font-size: 1.5rem;
@@ -180,6 +223,39 @@ export default function Home() {
 
         .logo {
           height: 1em;
+        }
+
+        .tasks {
+          min-width: 480px;
+          background-color: #f5f5f5;
+        }
+
+        .completed {
+          text-decoration-line: line-through;
+        }
+
+        .date-item {
+          height: 40px;
+          width: 40px;
+          border: none;
+        }
+
+        .date-item :hover {
+          background-color: red;
+        }
+
+        .btn-submit {
+          background-color: #6ab04c;
+          height: 36px;
+          border-radius: 4px;
+          min-width: 80px;
+          border: 1px solid #badc58;
+          color: #fff;
+        }
+
+        input {
+          height: 36px;
+          padding: 0 4px;
         }
 
         @media (max-width: 600px) {
@@ -205,5 +281,5 @@ export default function Home() {
         }
       `}</style>
     </div>
-  )
+  );
 }
