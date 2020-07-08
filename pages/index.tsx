@@ -4,6 +4,7 @@ import { useState, useReducer } from 'react';
 import { todoReducer } from '../reducers/todoReducer';
 import TaskForm from '../components/TaskForm';
 import TaskList, { TaskType } from '../components/TaskList';
+import Calendar from '../components/Calendar';
 
 export default function Home() {
   const [state, dispatch] = useReducer(todoReducer, {
@@ -76,6 +77,7 @@ export default function Home() {
               onClickEdit={onClickEdit}
               removeTask={removeTask}
               toggleComplete={toggleComplete}
+              selectedTask={selectedTask}
             />
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TaskType } from './TaskList';
+import Button from './Button';
 
 type Props = {
   selectedTask: TaskType | null;
@@ -31,9 +32,9 @@ export default function TaskForm(props: Props) {
         <h3>New Task</h3>
         <form onSubmit={onSubmitText}>
           <input type='text' name='task' value={text} onChange={onChangeText} />
-          <button className='btn-submit' type='submit'>
+          <Button className='btn-submit' type='submit'>
             {props.selectedTask ? 'Save' : 'Add'}
-          </button>
+          </Button>
         </form>
       </section>
 
