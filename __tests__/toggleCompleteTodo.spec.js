@@ -22,14 +22,18 @@ describe('toggle complete TODO', () => {
     ],
   };
 
-  it('could set complete status to be true', () => {
+  it('could set complete status of given id todo from false to true', () => {
     const state = todoReducer(currentState, {
       type: 'TOGGLE_COMPLETE',
       id: 2,
     });
+    // ensuring total todo in the list remains same
     expect(state.todos.length).toBe(3);
+
+    // the complete status changed to true
     expect(state.todos[1].completed).toBe(true);
 
+    // the todo list returns as expected
     expect(state.todos).toStrictEqual([
       {
         id: 1,
@@ -95,7 +99,7 @@ describe('toggle complete TODO', () => {
     ]);
   });
 
-  it('would not set completed status if the given id does not exist in the list', () => {
+  it('could not set completed status if the given id does not exist in the list', () => {
     const state = todoReducer(currentState, {
       type: 'TOGGLE_COMPLETE',
       id: 4,
