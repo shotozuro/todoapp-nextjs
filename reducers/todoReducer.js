@@ -1,11 +1,16 @@
 export const todoReducer = (state, action) => {
   switch (action?.type) {
-    case 'ADD_TASK':
-      return {
-        ...state,
-        todos: [...state.todos, action.payload],
-        nextId: state.nextId + 1,
-      };
+    case 'ADD_TASK': {
+      const trimTask = action.payload.task?.trim();
+      if (trimTask) {
+        return {
+          ...state,
+          todos: [...state.todos, action.payload],
+          nextId: state.nextId + 1,
+        };
+      }
+      return state;
+    }
     case 'REMOVE_TASK':
       return {
         ...state,

@@ -18,29 +18,23 @@ describe('Add Todo', () => {
     ]);
   });
 
-  it('could remove a task with given id', () => {
-    const currentState = {
-      nextId: 3,
-      todos: [
-        {
-          id: 1,
-          task: 'Meeting with clients',
-          completed: false,
-        },
-        {
-          id: 2,
-          task: 'Meeting with boss',
-          completed: false,
-        },
-      ],
-    };
-    const state = todoReducer(currentState, {
-      type: 'REMOVE_TASK',
-      id: 1,
+  it('could not add to the list if task only contains space character', () => {
+    const state = todoReducer(initialState, {
+      type: 'ADD_TASK',
+      payload: { id: 1, task: '  ', completed: false },
     });
-    expect(state.todos.length).toBe(1);
-    expect(state.todos).toStrictEqual([
-      { id: 2, task: 'Meeting with boss', completed: false },
-    ]);
+    expect(state.nextId).toBe(1);
+    expect(state.todos.length).toBe(0);
+    expect(state.todos).toStrictEqual([]);
+  });
+
+  it('could not add to the list if task is empty', () => {
+    const state = todoReducer(initialState, {
+      type: 'ADD_TASK',
+      payload: { id: 1, task: '', completed: false },
+    });
+    expect(state.nextId).toBe(1);
+    expect(state.todos.length).toBe(0);
+    expect(state.todos).toStrictEqual([]);
   });
 });
