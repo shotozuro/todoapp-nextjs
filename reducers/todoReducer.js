@@ -20,14 +20,18 @@ export const todoReducer = (state, action) => {
     case 'EDIT_TASK': {
       const index = state.todos.findIndex((todo) => todo.id === action.id);
       if (index > -1) {
-        return {
-          ...state,
-          todos: [
-            ...state.todos.slice(0, index),
-            action.payload,
-            ...state.todos.slice(index + 1, state.todos.length),
-          ],
-        };
+        const trimTask = action.payload.task?.trim();
+        if (trimTask) {
+          return {
+            ...state,
+            todos: [
+              ...state.todos.slice(0, index),
+              action.payload,
+              ...state.todos.slice(index + 1, state.todos.length),
+            ],
+          };
+        }
+        return state;
       }
       return state;
     }

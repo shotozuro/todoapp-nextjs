@@ -42,15 +42,13 @@ export default function Home() {
   };
 
   const onSave = (task: string) => {
-    if (task) {
-      const payload = { ...selectedTask, task };
-      dispatch({
-        type: 'EDIT_TASK',
-        id: selectedTask.id,
-        payload,
-      });
-      setSelectedTask(null);
-    }
+    const payload = { ...selectedTask, task };
+    dispatch({
+      type: 'EDIT_TASK',
+      id: selectedTask.id,
+      payload,
+    });
+    setSelectedTask(null);
   };
 
   return (
