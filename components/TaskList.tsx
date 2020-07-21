@@ -37,20 +37,30 @@ const TaskItem = (props) => {
   return (
     <>
       <li className={props.isSelected ? 'selected' : ''}>
-        {props.todo.completed ? (
-          <FaCheckSquare color={'green'} size={30} />
-        ) : (
-          <FaSquare color={'rgba(0,0,0,0.5)'} size={30} />
-        )}
-        <span
+        <a
           className={`task${props.todo.completed ? ' completed' : ''}`}
           onClick={() => props.toggleComplete(props.todo.id)}
         >
-          {props.todo.task}
-        </span>
+          <span className='checkbox'>
+            {props.todo.completed ? (
+              <FaCheckSquare color={'#00b894'} size={30} />
+            ) : (
+              <FaSquare color={'rgba(0,0,0,0.5)'} size={30} />
+            )}
+          </span>
+          <span className='taskName'>{props.todo.task}</span>
+        </a>
         <div style={{ display: 'flex' }}>
-          <Button onClick={() => props.onClickEdit(props.todo)}>Edit</Button>
-          <Button onClick={() => props.removeTask(props.todo.id)}>
+          <Button
+            data-testid={'edit-' + props.todo.id}
+            onClick={() => props.onClickEdit(props.todo)}
+          >
+            Edit
+          </Button>
+          <Button
+            data-testid={'remove-' + props.todo.id}
+            onClick={() => props.removeTask(props.todo.id)}
+          >
             Remove
           </Button>
         </div>
@@ -63,16 +73,28 @@ const TaskItem = (props) => {
           list-style: none;
           min-height: 48px;
           border-bottom: 1px solid #cacaca;
-          padding: 10px;
+          padding: 4px 8px;
+          margin: 0px -8px;
         }
 
-        li > span {
-          padding: 12px 10px;
+        li > a {
           width: 100%;
+          display: flex;
+          align-items: center;
         }
 
         li :hover {
-          background-color: rgba(0, 0, 0, 0.2);
+          background-color: #5decd140;
+        }
+
+        .checkbox {
+          width: 30px;
+          height: 30px;
+        }
+
+        .taskName {
+          padding: 0 8px;
+          word-wrap: normal;
         }
 
         .selected {
