@@ -1,6 +1,6 @@
 {
-  "testRegex": "((\\.|/*.)(spec))\\.js?$",
+  "testRegex": "((\\.|/*.)(spec|test))\\.js?$",
   "transform": {
-    "^.+\\.jsx?$": "babel-jest"
+    "^.+\\.(jsx|js|tsx|ts)?$": "babel-jest"
   }
 }
