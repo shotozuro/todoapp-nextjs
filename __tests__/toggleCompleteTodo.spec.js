@@ -1,6 +1,10 @@
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+import Home from '../pages/index';
+
 import { todoReducer } from '../reducers/todoReducer';
 
-describe('toggle complete TODO', () => {
+describe('UNIT TEST TOGGLE TODO', () => {
   const currentState = {
     nextId: 4,
     todos: [
@@ -106,5 +110,23 @@ describe('toggle complete TODO', () => {
     });
     expect(state.todos.length).toBe(3);
     expect(state.todos).toStrictEqual(currentState.todos);
+  });
+});
+
+describe('INTEGRATION TEST - TOGGLE TODO', () => {
+  it('could set task to be completed', () => {
+    const home = render(<Home />);
+    const taskInput = home.getByPlaceholderText('Type your todo');
+    const buttonAdd = home.getByText('Add');
+
+    fireEvent.change(taskInput, { target: { value: 'Eat some fruits' } });
+    fireEvent.click(buttonAdd);
+    fireEvent.change(taskInput, { target: { value: 'Post an article' } });
+    fireEvent.click(buttonAdd);
+
+    const listItem = home.getByText('Post an article');
+    fireEvent.click(listItem);
+    expect(home.queryAllByRole('listitem').length).toBe(2);
+    expect(home.container.querySelectorAll('.completed').length).toBe(1);
   });
 });
