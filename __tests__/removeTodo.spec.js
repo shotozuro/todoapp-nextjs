@@ -1,3 +1,7 @@
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+import Home from '../pages/index';
+
 import { todoReducer } from '../reducers/todoReducer';
 
 describe('Remove TODO', () => {
@@ -36,5 +40,22 @@ describe('Remove TODO', () => {
 
     expect(state.todos.length).toBe(2);
     expect(state.todos).toStrictEqual(currentState.todos);
+  });
+});
+
+describe('Integration test remove todo', () => {
+  it('could remove a task from the list', () => {
+    const home = render(<Home />);
+    const taskInput = home.getByPlaceholderText('Type your todo');
+    const buttonAdd = home.getByText('Add');
+
+    fireEvent.change(taskInput, { target: { value: 'Eat some fruits' } });
+    fireEvent.click(buttonAdd);
+    fireEvent.change(taskInput, { target: { value: 'Post an article' } });
+    fireEvent.click(buttonAdd);
+
+    const buttonRemove = home.getByTestId('remove-1');
+    fireEvent.click(buttonRemove);
+    expect(home.queryAllByRole('listitem').length).toBe(1);
   });
 });
