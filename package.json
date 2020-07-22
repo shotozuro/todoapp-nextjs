@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "test": "jest --config ./jest.config.json",
+    "test:integration": "jest --config ./jest.config.json __tests__/addRemoveTodo.spec.js",
     "test:watch": "yarn test -- --watch"
   },
   "dependencies": {
