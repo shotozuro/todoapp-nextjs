@@ -102,15 +102,6 @@ describe('UNIT TEST TOGGLE TODO', () => {
       },
     ]);
   });
-
-  it('could not set completed status if the given id does not exist in the list', () => {
-    const state = todoReducer(currentState, {
-      type: 'TOGGLE_COMPLETE',
-      id: 4,
-    });
-    expect(state.todos.length).toBe(3);
-    expect(state.todos).toStrictEqual(currentState.todos);
-  });
 });
 
 describe('INTEGRATION TEST - TOGGLE TODO', () => {
