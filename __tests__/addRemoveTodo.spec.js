@@ -3,7 +3,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Home from '../pages/index';
 
-const numberOfTasks = [1, 20, 50, 100, 500, 1000];
+const numberOfTasks = [1, 20, 50, 100, 500];
 
 describe.each(numberOfTasks)('Add & Remove Task - %i tasks', (numberOfTask) => {
   let home;
