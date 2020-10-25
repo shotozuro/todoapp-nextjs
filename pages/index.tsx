@@ -1,10 +1,10 @@
 // @ts-nocheck
-import Head from 'next/head';
-import { useState, useReducer } from 'react';
-import { todoReducer } from '../reducers/todoReducer';
-import TaskForm from '../components/TaskForm';
-import TaskList, { TaskType } from '../components/TaskList';
-import { isIdExist, validateInput, useTodoAPI } from '../helpers/todo-helper';
+import Head from "next/head";
+import { useState, useReducer } from "react";
+import { todoReducer } from "../reducers/todoReducer";
+import TaskForm from "../components/TaskForm";
+import TaskList, { TaskType } from "../components/TaskList";
+import { isIdExist, validateInput, useTodoAPI } from "../helpers/todo-helper";
 
 export default function Home() {
   const [state, dispatch] = useReducer(todoReducer, {
@@ -17,7 +17,7 @@ export default function Home() {
   const toggleComplete = (id: number) => {
     if (isIdExist(id, state.todos)) {
       dispatch({
-        type: 'TOGGLE_COMPLETE',
+        type: "TOGGLE_COMPLETE",
         id,
       });
     }
@@ -26,7 +26,7 @@ export default function Home() {
   const addTask = (task: string) => {
     if (validateInput(task)) {
       dispatch({
-        type: 'ADD_TASK',
+        type: "ADD_TASK",
         payload: {
           id: state.nextId,
           task,
@@ -39,7 +39,7 @@ export default function Home() {
   const removeTask = (id: number) => {
     if (isIdExist(id, state.todos)) {
       dispatch({
-        type: 'REMOVE_TASK',
+        type: "REMOVE_TASK",
         id,
       });
     }
@@ -49,7 +49,7 @@ export default function Home() {
     if (isIdExist(selectedTask?.id, state.todos) && validateInput(task)) {
       const payload = { ...selectedTask, task };
       dispatch({
-        type: 'EDIT_TASK',
+        type: "EDIT_TASK",
         id: selectedTask.id,
         payload,
       });
@@ -59,6 +59,17 @@ export default function Home() {
 
   const onClickEdit = (taskObject: TaskType) => {
     setSelectedTask(taskObject);
+  };
+
+  const onSearch = (keyword: string) => {
+    if (keyword && keyword.trim()) {
+      dispatch({
+        type: "FILTER_TASK",
+        payload: keyword,
+      });
+    } else {
+      dispatch({ type: "REFRESH_TODO" });
+    }
   };
 
   return (
@@ -80,6 +91,7 @@ export default function Home() {
             removeTask={removeTask}
             toggleComplete={toggleComplete}
             selectedTask={selectedTask}
+            onSearch={onSearch}
           />
         </div>
       </main>

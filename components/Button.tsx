@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-export default function Button(props) {
+export default function Button(props: any) {
   return (
     <>
       <button {...props}>{props.children}</button>
